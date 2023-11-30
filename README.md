@@ -163,6 +163,53 @@ const pdfBytes = await pdfDoc.save()
 //   • Rendered in an <iframe>
 ```
 
+_Try this code for work this in nodejs
+<!-- prettier-ignore -->
+```js
+const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
+const fs = require('fs').promises; // Using promises version for async/await
+
+// Create a new PDFDocument
+async function createPDF () {
+const pdfDoc = await PDFDocument.create()
+
+// Embed the Times Roman font
+const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+
+// Add a blank page to the document
+const page = pdfDoc.addPage()
+
+// Get the width and height of the page
+const { width, height } = page.getSize()
+
+// Draw a string of text toward the top of the page
+const fontSize = 30
+page.drawText('Creating PDFs in JavaScript is awesome!', {
+  x: 50,
+  y: height - 4 * fontSize,
+  size: fontSize,
+  font: timesRomanFont,
+  color: rgb(0, 0.53, 0.71),
+})
+
+// Serialize the PDFDocument to bytes (a Uint8Array)
+const pdfBytes = await pdfDoc.save()
+
+// console.log(pdfBytes);
+
+  // Save PDF bytes to a file
+  await fs.writeFile('output.pdf', pdfBytes);
+
+  console.log('PDF saved as "output.pdf"');
+
+// For example, `pdfBytes` can be:
+//   • Written to a file in Node
+//   • Downloaded from the browser
+//   • Rendered in an <iframe>
+}
+createPDF();
+```
+
 ### Modify Document
 
 _This example produces [this PDF](assets/pdfs/examples/modify_document.pdf)_ (when [this PDF](assets/pdfs/with_update_sections.pdf) is used for the `existingPdfBytes` variable).
